@@ -3,8 +3,17 @@ echo "enter server address"
 read server_addr
 
 ssh root@$server_addr /bin/bash << EOF
+
+  sudo dd if=/dev/zero of=/swapfile bs=1M count=2000
+  sudo chmod 600 /swapfile
+  sudo mkswap /swapfile
+  sudo swapon /swapfile
+  sudo swapon -s
+
   adduser deployer
   gpasswd -a deployer sudo
+
+  sudo echo "deployer ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
   su deployer
 
